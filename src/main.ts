@@ -1,13 +1,22 @@
 import "./style.css";
 import { createSignal, createEffect } from "./reactive";
 
-const [count, setCount] = createSignal<number>(0);
+const [count, setCount] = createSignal(0);
+const [count2, setCount2] = createSignal(2);
+const [show, setShow] = createSignal(true);
 createEffect(() => {
-  console.log(count());
+  // console.log(count());
+  if (show()) {
+    console.log(count(), 'count is running');
+  } else {
+    console.log()
+    console.log(count2(), 'count2 is running');
+  }
 });
+setShow(false);
 setCount(10);
 
-// steps: 
+// steps:
 // 1. createSignal() returns a signal, which is a tuple of two functions
 // 2. call createEffect() which pushes the effect onto the context stack
 // 3. the callback is then executed - count() is called, which returns the value
