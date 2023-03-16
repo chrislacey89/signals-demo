@@ -13,11 +13,11 @@ export function createSignal<T>(value: T): Signal<T> {
 
   function read() {
     // grab the last effect that was pushed onto the context stack
-    const observer = context[context.length - 1];
+    const effect = context[context.length - 1];
     // if there is an effect, add it to the subscriptions
-    if (observer) {
-      //   subscriptions.add(observer);
-      subscribe(observer, subscriptions);
+    if (effect) {
+      //   subscriptions.add(effect);
+      subscribe(effect, subscriptions);
     }
     return value;
   }
@@ -35,7 +35,9 @@ export function createSignal<T>(value: T): Signal<T> {
 export function createEffect(callback: () => void) {
   const effect = {
     execute() {
+      console.log(effect, 'effect is running')  
       cleanup(effect);
+      console.log(effect, 'cleaned up')
       context.push(effect);
       callback();
       context.pop();
@@ -45,14 +47,14 @@ export function createEffect(callback: () => void) {
   effect.execute();
 }
 
-function cleanup(observer: Effect) {
-  observer.dependencies.forEach((dependency) => {
-    dependency.delete(observer);
+function cleanup(effect: Effect) {
+  effect.dependencies.forEach((dependency) => {
+    dependency.delete(effect);
   });
-  observer.dependencies.clear();
+  effect.dependencies.clear();
 }
 
-function subscribe(observer: Effect, subscriptions: Set<Effect>) {
-  subscriptions.add(observer);
-  observer.dependencies.add(subscriptions);
+function subscribe(effect: Effect, subscriptions: Set<Effect>) {
+  subscriptions.add(effect);
+  effect.dependencies.add(subscriptions);
 }
