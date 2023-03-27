@@ -16,7 +16,6 @@ export function createSignal<T>(value: T): Signal<T> {
     const effect = context[context.length - 1];
     // if there is an effect, add it to the subscriptions
     if (effect) {
-      //   subscriptions.add(effect);
       subscribe(effect, subscriptions);
     }
     return value;
