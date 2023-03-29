@@ -1,14 +1,24 @@
 import "./style.css";
 import { createSignal, createEffect } from "./reactive";
 
+const arrayOfFoods = [
+  { name: "apple", color: "red" },
+  { name: "banana", color: "yellow" },
+  { name: "orange", color: "orange" },
+  { name: "grape", color: "purple" },
+  { name: "pear", color: "green" },
+  { name: "strawberry", color: "red" },
+  { name: "blueberry", color: "blue" },
+];
 const [count, setCount] = createSignal(0);
 const [count2, setCount2] = createSignal(2);
 const [show, setShow] = createSignal(true);
+const [foods, setFoods] = createSignal(arrayOfFoods);
 createEffect(() => {
   if (show()) {
-    console.log(count(), 'count is running');
+    console.log(count(), "count is running");
   } else {
-    console.log(count2(), 'count2 is running');
+    console.log(count2(), "count2 is running");
   }
 });
 setShow(false);
@@ -38,6 +48,25 @@ button.addEventListener("click", () => {
 const div = document.createElement("div");
 createEffect(() => {
   div.textContent = count().toString();
-} )
+});
 document.body.appendChild(button);
 document.body.appendChild(div);
+
+const input = document.createElement("input");
+input.addEventListener("input", (e) => {
+  const value = (e.target as HTMLInputElement).value;
+  setFoods(arrayOfFoods.filter((food) => food.name.includes(value)));
+});
+// display array of foods
+const ul = document.createElement("ul");
+createEffect(() => {
+  ul.innerHTML = "";
+  foods().forEach((food) => {
+    const li = document.createElement("li");
+    li.textContent = food.name;
+    li.style.color = food.color;
+    ul.appendChild(li);
+  });
+});
+document.body.appendChild(input);
+document.body.appendChild(ul);

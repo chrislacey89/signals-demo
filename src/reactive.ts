@@ -7,7 +7,6 @@ type Signal<T> = [() => T, (newValue: T) => void];
 // how we keep track of the current effect that is running
 const context: Array<Effect> = [];
 
-
 export function createSignal<T>(value: T): Signal<T> {
   const subscriptions = new Set<Effect>();
 
@@ -34,9 +33,7 @@ export function createSignal<T>(value: T): Signal<T> {
 export function createEffect(callback: () => void) {
   const effect = {
     execute() {
-      console.log(effect, 'effect is running')  
       cleanup(effect);
-      console.log(effect, 'cleaned up')
       context.push(effect);
       callback();
       context.pop();
